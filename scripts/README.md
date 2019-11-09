@@ -1,19 +1,19 @@
-# rpitv.github.io
+# scripts
 
 This is mostly a collection of useful scripts for starting up new RPI TV servers.
 
 Many of these are usable via something like:
 
 ```bash
-wget https://rpitv.github.io/some_script
-chmod +x some_script
-./some_script
+wget https://rpitv.github.io/scripts/foo
+chmod +x foo
+./foo
 ```
 
 or even one-liners like:
 
 ```bash
-bash <(curl https://rpitv.github.io/some_script)
+bash <(curl https://rpitv.github.io/scripts/foo)
 ```
 
 ## Available tools
