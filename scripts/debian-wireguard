@@ -20,10 +20,10 @@ ADDR=$2
 
 # now let's generate a key pair
 PRVKEY=$(wg genkey)
-PUBKEY=$(echo "$KEY" | wg pubkey)
+PUBKEY=$(echo "$PRVKEY" | wg pubkey)
 
 # and a wireguard config
-(umask 077; cat > /etc/wireguard/wg0.conf << EOF
+(umask 077; cat > "/etc/wireguard/$INTERFACE.conf" << EOF
 [Interface]
 PrivateKey = $PRVKEY
 
@@ -35,7 +35,7 @@ PersistentKeepalive = 60
 EOF)
 
 # and configure the interface and its route
-cat > /etc/network/interfaces.d/wg0 << EOF
+cat > "/etc/network/interfaces.d/$INTERFACE" << EOF
 auto $INTERFACE
 iface $INTERFACE inet static
   address $ADDR
