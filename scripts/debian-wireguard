@@ -23,7 +23,9 @@ PRVKEY=$(wg genkey)
 PUBKEY=$(echo "$PRVKEY" | wg pubkey)
 
 # and a wireguard config
-(umask 077; cat > "/etc/wireguard/$INTERFACE.conf" << EOF
+(
+umask 077
+cat > "/etc/wireguard/$INTERFACE.conf" << EOF
 [Interface]
 PrivateKey = $PRVKEY
 
@@ -32,7 +34,8 @@ PublicKey = SPP7IKpDPI2J8uCYhoVJ8rCTUY8TAdsLktxZQl8P2hU=
 AllowedIPs = 172.16.9.0/24, 172.16.0.0/16
 Endpoint = 192.99.247.20:24356
 PersistentKeepalive = 60
-EOF)
+EOF
+)
 
 # and configure the interface and its route
 cat > "/etc/network/interfaces.d/$INTERFACE" << EOF
