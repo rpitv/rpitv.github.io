@@ -1,0 +1,52 @@
+#!/bin/bash
+
+# script based on the instructions at https://wiki.debian.org/Wireguard
+
+set -eux
+
+# install wireguard packages, which are currently not in debian stable
+# to do this we need to create some files
+echo "deb http://deb.debian.org/debian/ unstable main" > /etc/apt/sources.list.d/unstable-wireguard.list
+cat > /etc/apt/preferences.d/limit-unstable << 'EOF'
+Package: *
+Pin: release a=unstable
+Pin-Priority: 90
+EOF
+apt update
+apt install wireguard
+
+INTERFACE=$1
+ADDR=$2
+
+# now let's generate a key pair
+PRVKEY=$(wg genkey)
+PUBKEY=$(echo "$KEY" | wg pubkey)
+
+# and a wireguard config
+(umask 077; cat > /etc/wireguard/wg0.conf << EOF
+[Interface]
+PrivateKey = $PRVKEY
+
+[Peer]
+PublicKey = SPP7IKpDPI2J8uCYhoVJ8rCTUY8TAdsLktxZQl8P2hU=
+AllowedIPs = 172.16.9.0/24, 172.16.0.0/16
+Endpoint = 192.99.247.20:24356
+PersistentKeepalive = 60
+EOF)
+
+# and configure the interface and its route
+cat > /etc/network/interfaces.d/wg0 << EOF
+auto $INTERFACE
+iface $INTERFACE inet static
+  address $ADDR
+  netmask 255.255.255.0
+  pre-up ip link add \$IFACE type wireguard
+  pre-up wg setconf \$IFACE /etc/wireguard/\$IFACE.conf
+  post-up ip route add 172.16.0.0/16 via 172.16.9.1 dev \$IFACE
+  post-down ip link del \$IFACE
+EOF
+
+# start the new interface
+ifup $INTERFACE
+
+echo "public key for $INTERFACE ($ADDR) is $PUBKEY"
