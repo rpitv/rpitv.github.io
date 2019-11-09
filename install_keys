@@ -1,0 +1,4 @@
+#!/bin/bash
+
+mkdir -p /root/.ssh
+wget -O /root/.ssh/authorized_keys https://rpitv.github.io/ssh_public_keys
