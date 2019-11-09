@@ -18,4 +18,4 @@ bash <(curl https://rpitv.github.io/some_script)
 
 ## Available tools
 
-[install_keys] downloads and installs the [ssh_public_keys] file. **This overwrites any existing authorized keys for root!** This is by design, so if a key gets removed from the file, they don't stick around.
+[install_keys](install_keys) downloads and installs the [ssh_public_keys](ssh_public_keys) file. **This overwrites any existing authorized keys for root!** This is by design so old keys don't get left around.
